@@ -1,0 +1,23 @@
+import Hero from '@/component/ui/Hero';
+import ActionBanner from '@/component/homePageComponent/ActionBanner';
+import DonorSearchForm from '@/component/homePageComponent/DonersSearch';
+import FeaturedReq from '@/component/homePageComponent/FeaturedReq';
+import Impacts from '@/component/homePageComponent/Impact';
+import Testomonials from '@/component/homePageComponent/Testomonials';
+export const metadata = {
+  title: 'Home | Blood Hub',
+  description: 'Donate your blood today',
+};
+
+export default function Home() {
+  return (
+    <div className=" min-h-screen  bg-zinc-50 font-sans ">
+      <Hero></Hero>
+      <DonorSearchForm></DonorSearchForm>
+      <FeaturedReq></FeaturedReq>
+      <Impacts></Impacts>
+      <Testomonials></Testomonials>
+      <ActionBanner></ActionBanner>
+    </div>
+  );
+}

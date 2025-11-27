@@ -1,0 +1,186 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { FiPlusCircle, FiHeart, FiMapPin, FiPhone } from 'react-icons/fi';
+import { toast } from 'react-toastify';
+
+import { useMutation } from '@tanstack/react-query';
+import { apiClient } from '@/utils/apiClient';
+import Swal from 'sweetalert2';
+import { useSession } from 'next-auth/react';
+
+const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+const priorities = ['Low', 'Medium', 'High', 'Critical'];
+
+export default function AddRequestForm() {
+  const { data: session } = useSession();
+  const router = useRouter();
+  useEffect(() => {
+    document.title = 'Add Blood Request | Blood Hub';
+  }, []);
+  const [reset, setReset] = useState(null);
+  const insertData = useMutation({
+    mutationFn: async data => {
+      try {
+        const res = await apiClient('/blood-request', {
+          method: 'POST',
+          body: JSON.stringify(data),
+        });
+        return res.json();
+      } catch (error) {
+        console.log('error', error);
+        throw error;
+      }
+    },
+    onSuccess: (data, variables) => {
+      if (data?.success && data.requestId) {
+        toast.success('Blood request added successfully!');
+        reset.target.reset();
+        Swal.fire({
+          title: `Blood Request Added Successfully`,
+          text: `Request ID: ${data.requestId}`,
+          icon: 'success',
+          showCancelButton: true,
+          confirmButtonColor: '#03C988',
+          cancelButtonColor: '#3085d6',
+          confirmButtonText: 'Proceed',
+          cancelButtonText: 'Add Another One',
+        }).then(result => {
+          if (result.isConfirmed) {
+            router.push('/dashboard/my-request');
+          }
+        });
+      }
+    },
+    onError: err => {
+      console.log(err);
+      toast.error(err?.message || 'Failed to add request');
+    },
+  });
+
+  const { isPending } = insertData;
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    setReset(e);
+    const formData = {
+      userEmail: session.user.email,
+      bloodGroupNeeded: e.target.bloodGroupNeeded.value,
+      unitsNeeded: e.target.unitsNeeded.value,
+      hospitalName: e.target.hospitalName.value,
+      contactNumber: e.target.contactNumber.value,
+      priority: e.target.priority.value,
+    };
+
+    insertData.mutate(formData);
+  };
+
+  return (
+    <div className="card w-full max-w-2xl mx-auto shadow-xl bg-base-100 mt-8">
+      <form onSubmit={handleSubmit} className="card-body">
+        <h2 className="card-title text-2xl md:text-3xl mb-6 text-red-600">
+          <FiPlusCircle className="mr-2 hidden md:block" /> Submit New Blood
+          Request
+        </h2>
+
+        <div className="form-control fieldset">
+          <label className="label">
+            <span className="label-text flex items-center">
+              <FiHeart className="mr-2" />
+              Blood Group Needed
+            </span>
+          </label>
+          <select
+            name="bloodGroupNeeded"
+            className="select select-bordered w-full"
+            required
+          >
+            <option value="">Select Required Blood Group</option>
+            {bloodGroups.map(group => (
+              <option key={group} value={group}>
+                {group}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="form-control fieldset">
+          <label className="label">
+            <span className="label-text">Units Needed (Bags)</span>
+          </label>
+          <input
+            type="number"
+            name="unitsNeeded"
+            placeholder="e.g., 2"
+            min="1"
+            className="input input-bordered w-full"
+            required
+          />
+        </div>
+
+        <div className="form-control fieldset">
+          <label className="label">
+            <span className="label-text">Priority Level</span>
+          </label>
+          <select
+            name="priority"
+            className="select w-full select-bordered"
+            required
+          >
+            {priorities.map(p => (
+              <option key={p} value={p}>
+                {p}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="form-control fieldset">
+          <label className="label">
+            <span className="label-text flex items-center">
+              <FiMapPin className="mr-2" />
+              Hospital Name / Location
+            </span>
+          </label>
+          <input
+            type="text"
+            name="hospitalName"
+            placeholder="e.g., City Trauma Center, Dhaka"
+            className="input input-bordered w-full"
+            required
+          />
+        </div>
+
+        <div className="form-control fieldset">
+          <label className="label">
+            <span className="label-text flex items-center">
+              <FiPhone className="mr-2" />
+              Emergency Contact
+            </span>
+          </label>
+          <input
+            type="tel"
+            name="contactNumber"
+            placeholder="e.g., 01XXXXXXXXX"
+            className="input input-bordered w-full"
+            required
+          />
+        </div>
+
+        <div className="form-control mt-6">
+          <button
+            type="submit"
+            className="btn btn-error btn-sm md:btn-lg"
+            disabled={isPending}
+          >
+            {isPending ? (
+              <span className="loading loading-spinner"></span>
+            ) : (
+              'Submit Request'
+            )}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}

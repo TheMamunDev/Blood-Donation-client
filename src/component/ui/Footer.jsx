@@ -1,0 +1,38 @@
+// src/components/ui/Footer.jsx
+import React from 'react';
+import Link from 'next/link';
+import { MdBloodtype } from 'react-icons/md';
+
+export default function Footer() {
+  const currentYear = new Date().getFullYear();
+
+  return (
+    <footer className="footer flex flex-col md:flex-row footer-center p-10 bg-base-300 text-base-content border-t border-gray-200 mt-12">
+      <aside>
+        <MdBloodtype className="text-5xl text-red-600" />
+        <p className="font-bold text-lg">
+          Blood Hub
+          <br />
+          Providing reliable blood connection since 2024
+        </p>
+      </aside>
+      <nav>
+        <div className="grid grid-flow-col gap-4">
+          <Link href="/about" className="link link-hover">
+            About Us
+          </Link>
+          <Link href="/requests" className="link link-hover">
+            Find Requests
+          </Link>
+          <Link href="/contact" className="link link-hover">
+            Contact
+          </Link>
+        </div>
+      </nav>
+
+      <aside>
+        <p>Copyright © {currentYear} - All rights reserved by Blood Hub</p>
+      </aside>
+    </footer>
+  );
+}

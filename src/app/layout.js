@@ -1,0 +1,23 @@
+import QueryProvider from '@/providers/queryProvider';
+import './globals.css';
+import LayoutProvider from '@/component/providers/LayoutProvider';
+
+export const metadata = {
+  // title: 'Blood Donation',
+  description: 'Donate your blood today',
+  icons: {
+    icon: '/favicon.ico',
+  },
+};
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en" data-theme="light">
+      <body className="max-w-7xl mx-auto">
+        <QueryProvider>
+          <LayoutProvider>{children}</LayoutProvider>
+        </QueryProvider>
+      </body>
+    </html>
+  );
+}
