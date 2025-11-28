@@ -27,6 +27,15 @@ real-time.
 
 ---
 
+## Route
+- **/** Home page
+- **/requests** get all open blood requests
+- **/dashboard/add-request** Create new blood request by user
+- **/dashboard/my-request** Manage all blood request created by user
+- **/about** About us page route
+- **/contact** Contact us page route
+
+
 ### 🚀 Getting Started (Local Setup)
 
 To view and run this project locally, follow these simple steps:
