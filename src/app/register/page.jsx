@@ -11,6 +11,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn, useSession } from 'next-auth/react';
 import SessionLoader from '@/component/loader/SessionLoader';
 
+const ACCEPTED_IMAGE_TYPES = [
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
+  'image/webp',
+];
+const MAX_FILE_SIZE = 5000000;
 const registerSchema = z.object({
   name: z.string().min(1, 'Name Required!'),
   email: z.string().email('Invalid email address'),
@@ -20,7 +27,14 @@ const registerSchema = z.object({
     .regex(/[A-Z]/, 'Must contain at least one uppercase letter')
     .regex(/[0-9]/, 'Must contain at least one number'),
 
-  photo: z.string().url('Invalid photo URL'),
+  photo: z
+    .any()
+    .transform(fileList => fileList?.[0])
+    .refine(file => file?.size <= MAX_FILE_SIZE, 'Max image size is 5MB.')
+    .refine(
+      file => ACCEPTED_IMAGE_TYPES.includes(file?.type),
+      'Only .jpg, .jpeg, .png and .webp formats are supported.'
+    ),
 });
 
 export default function RegisterPage() {
@@ -48,25 +62,46 @@ export default function RegisterPage() {
         <SessionLoader></SessionLoader>
       </div>
     );
+  const uploadToImgbb = async file => {
+    const apiKey = process.env.NEXT_PUBLIC_IMGBB_KEY;
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    const res = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    const data = await res.json();
+    return data.data.display_url; // return image URL
+  };
 
   const onSubmit = async formData => {
     const registrationData = {
       name: formData.name,
       email: formData.email,
       password: formData.password,
-      photo: formData.photo,
+      photo: 'https://img.icons8.com/office/300/person-male-skin-type-4.png',
     };
-
     startTransition(async () => {
+      try {
+        const photoURL = await uploadToImgbb(formData.photo);
+        registrationData.photo = photoURL;
+        // console.log(photoURL);
+      } catch (err) {
+        console.log(err);
+        registrationData.photo =
+          'https://img.icons8.com/office/300/person-male-skin-type-4.png';
+      }
+
       try {
         const res = await fetch('/api/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(registrationData),
         });
-
-        const json = await res.json(); // renamed (no shadowing)
-
+        const json = await res.json();
         if (json?.message) {
           Swal.fire({
             icon: 'success',
@@ -89,7 +124,7 @@ export default function RegisterPage() {
 
   const handleGoogle = e => {
     e.preventDefault();
-    signIn('google', { callbackUrl: '/' });
+    signIn('google', { callbackUrl: '/?login=success' });
   };
 
   return (
@@ -133,12 +168,13 @@ export default function RegisterPage() {
                   <p className="text-red-400">{errors.password.message}</p>
                 )}
 
-                <label className="label">Photo URL </label>
+                <label className="label">Photo </label>
                 <input
                   {...register('photo')}
-                  type="text"
-                  className="input w-full"
-                  placeholder="Photo URL"
+                  className="file-input w-full"
+                  name="photo"
+                  type="file"
+                  accept="image/*"
                 />
                 {errors.photo && (
                   <p className="text-red-400">{errors.photo.message}</p>
@@ -149,7 +185,7 @@ export default function RegisterPage() {
                 <div className="form-control mt-6 flex flex-col md:flex-row gap-3">
                   <button
                     type="submit"
-                    className="btn btn-primary btn-lg"
+                    className="btn bg-red-600 text-white btn-lg"
                     disabled={isPending}
                   >
                     {isPending ? (

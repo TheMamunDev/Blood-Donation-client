@@ -7,6 +7,7 @@ import { useSession } from 'next-auth/react';
 import { apiClient } from '@/utils/apiClient';
 import MyRequestsSkeleton from '@/component/loader/MyRequestsSkeleton';
 import { useEffect } from 'react';
+import Error from '@/component/error/Error';
 
 export default function ManageRequestsPage() {
   useEffect(() => {
@@ -25,7 +26,7 @@ export default function ManageRequestsPage() {
       return res.json();
     },
   });
-  if (error) return <p className="text-red-500">Failed to load data</p>;
+  if (error) return <Error error={error}></Error>;
 
   return (
     <div className="py-10 min-h-screen">

@@ -1,5 +1,6 @@
 'use client';
 
+import Error from '@/component/error/Error';
 import DonorSearchForm from '@/component/homePageComponent/DonersSearch';
 import FeturedLoaderSkeleton from '@/component/loader/FeturedLoaderSkeleton';
 import RequestCard from '@/component/manage/RequestCard';
@@ -26,6 +27,7 @@ export default function RequestListPage() {
       return res.json();
     },
   });
+  if (error) return <Error error={error}></Error>;
 
   let filteredRequests = allRequests;
 

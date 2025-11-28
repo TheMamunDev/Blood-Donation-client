@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 
 const navLinks = [
   { label: 'Home', to: '/', icon: <MdOutlineHome /> },
@@ -102,12 +103,24 @@ export default function Navbar() {
 
             {!isLoading && isAuthenticated && (
               <div className="dropdown dropdown-end">
-                <label
+                <div
                   tabIndex={0}
-                  className="btn btn-primary m-1 flex items-center gap-2"
+                  role="button"
+                  className=" avatar transition-transform duration-300 hover:scale-105"
                 >
-                  <FiUser /> {session?.user?.name?.split(' ')[0] || 'User'}
-                </label>
+                  <div className="w-10 rounded-full ring ring-error ring-offset-secondary ring-offset-2">
+                    <Image
+                      width={40}
+                      height={40}
+                      alt={session?.user?.name}
+                      src={
+                        session?.user?.image ||
+                        'https://i.pravatar.cc/150?img=50'
+                      }
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                </div>
 
                 <ul
                   tabIndex={0}
@@ -143,10 +156,10 @@ export default function Navbar() {
 
             {!isLoading && !isAuthenticated && (
               <div className="space-x-2">
-                <Link href="/login" className="btn btn-outline btn-primary">
+                <Link href="/login" className="btn btn-outline btn-error">
                   <FiLogIn /> Login
                 </Link>
-                <Link href="/register" className="btn btn-secondary">
+                <Link href="/register" className="btn bg-red-600 text-white">
                   Register
                 </Link>
               </div>
@@ -185,7 +198,7 @@ export default function Navbar() {
             ) : (
               <>
                 <DropdownMenuItem>
-                  <Link href={'/login'} className="flex items-center gap-1">
+                  <Link href={'/login'} className=" flex items-center gap-1">
                     Login
                   </Link>
                 </DropdownMenuItem>

@@ -98,7 +98,7 @@ const LoginForm = () => {
                 <div className="form-control mt-6 flex flex-col md:flex-row gap-3">
                   <button
                     type="submit"
-                    className="btn btn-primary btn-lg"
+                    className="btn bg-red-600 text-white btn-lg"
                     disabled={isPending}
                   >
                     {isPending ? (

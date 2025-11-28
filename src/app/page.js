@@ -4,6 +4,8 @@ import DonorSearchForm from '@/component/homePageComponent/DonersSearch';
 import FeaturedReq from '@/component/homePageComponent/FeaturedReq';
 import Impacts from '@/component/homePageComponent/Impact';
 import Testomonials from '@/component/homePageComponent/Testomonials';
+import ToastListner from '@/component/homePageComponent/ToastListner';
+
 export const metadata = {
   title: 'Home | Blood Hub',
   description: 'Donate your blood today',
@@ -12,6 +14,7 @@ export const metadata = {
 export default function Home() {
   return (
     <div className=" min-h-screen  bg-zinc-50 font-sans ">
+      <ToastListner></ToastListner>
       <Hero></Hero>
       <DonorSearchForm></DonorSearchForm>
       <FeaturedReq></FeaturedReq>

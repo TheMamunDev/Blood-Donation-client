@@ -4,6 +4,7 @@ import React from 'react';
 import RequestCard from '../manage/RequestCard';
 import { useQuery } from '@tanstack/react-query';
 import FeturedLoaderSkeleton from '../loader/FeturedLoaderSkeleton';
+import Error from '../error/Error';
 
 const FeaturedReq = () => {
   const {
@@ -20,7 +21,7 @@ const FeaturedReq = () => {
       return res.json();
     },
   });
-  if (error) return <p className="text-red-500">Failed to load data</p>;
+  if (error) return <Error error={error}></Error>;
   // console.log(requests);
   return (
     <section className="py-16 bg-white">

@@ -14,6 +14,7 @@ import {
 } from 'react-icons/fi';
 import RequestCard from '@/component/manage/RequestCard'; // optional if you reuse
 import RequestDetailSkeleton from '@/component/loader/RequestDetailSkeleton';
+import Error from '@/component/error/Error';
 
 const getPriorityBadgeClass = priority => {
   switch (priority) {
@@ -46,12 +47,7 @@ export default function RequestDetailsPage() {
   });
   console.log(request);
   if (isLoading) return <RequestDetailSkeleton></RequestDetailSkeleton>;
-  if (error || !request)
-    return (
-      <div>
-        <h2 className="text-red-500 text-center py-10">Request Not Found</h2>
-      </div>
-    );
+  if (error) return <Error error={error}></Error>;
 
   return (
     <div className="min-h-screen py-10 max-w-4xl mx-auto">
