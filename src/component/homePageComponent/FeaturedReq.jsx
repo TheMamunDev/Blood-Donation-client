@@ -35,7 +35,7 @@ const FeaturedReq = () => {
         <FeturedLoaderSkeleton total={6} />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {requests.map(request => (
+          {requests?.map(request => (
             <RequestCard key={request._id} request={request}></RequestCard>
           ))}
         </div>

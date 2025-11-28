@@ -5,13 +5,13 @@ import { FiArchive } from 'react-icons/fi';
 import { useQuery } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 import { apiClient } from '@/utils/apiClient';
-
-// export const metadata = {
-//   title: 'My Requests | Blood Hub',
-//   description: 'Donate your blood today',
-// };
+import MyRequestsSkeleton from '@/component/loader/MyRequestsSkeleton';
+import { useEffect } from 'react';
 
 export default function ManageRequestsPage() {
+  useEffect(() => {
+    document.title = 'My Requests | Blood Hub';
+  }, []);
   const { data: session } = useSession();
   const {
     data: requests,
@@ -34,7 +34,7 @@ export default function ManageRequestsPage() {
         Requests
       </h1>
       <p className="text-lg text-gray-500 mb-8">
-        Hello, {session.user.name || session.user.email}. Manage all your
+        Hello, {session?.user.name || session?.user.email}. Manage all your
         submitted blood requests and check their status.
       </p>
 
@@ -69,11 +69,17 @@ export default function ManageRequestsPage() {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {requests?.map(request => (
-            <MyRequestedCard key={request._id} request={request} />
-          ))}
-        </div>
+        <>
+          {isLoading ? (
+            <MyRequestsSkeleton total={9}> </MyRequestsSkeleton>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {requests?.map(request => (
+                <MyRequestedCard key={request._id} request={request} />
+              ))}
+            </div>
+          )}
+        </>
       )}
     </div>
   );
