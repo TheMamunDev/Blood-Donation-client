@@ -18,6 +18,7 @@ const LoginForm = () => {
   const { data: session, status } = useSession();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/';
+  console.log(callbackUrl + '/?loginSuccess=true');
   const [error, setError] = useState('');
   const [isPending, startTransition] = useTransition();
   const {
@@ -59,7 +60,7 @@ const LoginForm = () => {
     );
   const handleGoogle = e => {
     e.preventDefault();
-    signIn('google', { callbackUrl });
+    signIn('google', `${callbackUrl}/?loginSuccess=true`);
   };
   return (
     <div className="flex min-h-screen justify-center items-center py-10 bg-base-100">

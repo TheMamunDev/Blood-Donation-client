@@ -5,6 +5,7 @@ import FeaturedReq from '@/component/homePageComponent/FeaturedReq';
 import Impacts from '@/component/homePageComponent/Impact';
 import Testomonials from '@/component/homePageComponent/Testomonials';
 import ToastListner from '@/component/homePageComponent/ToastListner';
+import { Suspense } from 'react';
 
 export const metadata = {
   title: 'Home | Blood Hub',
@@ -14,7 +15,10 @@ export const metadata = {
 export default function Home() {
   return (
     <div className=" min-h-screen  bg-zinc-50 font-sans ">
-      <ToastListner></ToastListner>
+      <Suspense>
+        <ToastListner></ToastListner>
+      </Suspense>
+
       <Hero></Hero>
       <DonorSearchForm></DonorSearchForm>
       <FeaturedReq></FeaturedReq>

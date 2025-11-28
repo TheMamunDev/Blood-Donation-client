@@ -66,7 +66,7 @@ export default function RegisterPage() {
     const apiKey = process.env.NEXT_PUBLIC_IMGBB_KEY;
 
     const formData = new FormData();
-    formData.append('image', file);
+    formData.append('photo', file);
 
     const res = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
       method: 'POST',
@@ -74,7 +74,7 @@ export default function RegisterPage() {
     });
 
     const data = await res.json();
-    return data.data.display_url; // return image URL
+    return data.data.display_url;
   };
 
   const onSubmit = async formData => {
@@ -124,7 +124,7 @@ export default function RegisterPage() {
 
   const handleGoogle = e => {
     e.preventDefault();
-    signIn('google', { callbackUrl: '/?login=success' });
+    signIn('google', { callbackUrl: '/?loginSuccess=true' });
   };
 
   return (
