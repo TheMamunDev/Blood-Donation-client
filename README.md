@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Blood Hub
 
-## Getting Started
+The Blood Hub is a secure, full-stack web application designed to quickly
+connect urgent blood requests from individuals (seekers) with potential donors.
+Built using Next.js 14 (App Router) and MongoDB/Mongoose, the platform allows
+authorized users to submit, view, and manage their critical blood requests in
+real-time.
 
-First, run the development server:
+## Live Site URL
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+[https://blood-donation-client-kohl.vercel.app/]
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Key Features
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+- Secure Authentication: User registration and login using NextAuth.js
+  (Credentials and Google OAuth).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Persistent Requests: Store and manage urgent requests in a MongoDB database.
 
-## Learn More
+- Protected Routes: Authorization guards to secure request submission and
+  management pages.
 
-To learn more about Next.js, take a look at the following resources:
+- Public Visibility: A public board to view all active, open requests.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Image Upload: Secure profile picture uploads integrated via a Next.js Route
+  Handler and an external service (ImgBB).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+### 🚀 Getting Started (Local Setup)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+To view and run this project locally, follow these simple steps:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1.  **Clone the repository:**
+
+    ```bash
+    git clone https://github.com/TheMamunDev/Blood-Donation-client.git
+
+    ```
+
+2.  **Navigate to the project directory:**
+    ```bash
+    cd Blood-Donation-client
+    ```
+3.  **Change The env Config**
+    ```
+    MONGODB_URI
+    NEXTAUTH_SECRET
+    GOOGLE_CLIENT_ID
+    GOOGLE_CLIENT_SECRET
+    NEXTAUTH_URL
+    NEXT_PUBLIC_API_URL
+    JWT_SECRET
+    NEXT_PUBLIC_IMGBB_KEY=
+    ```
+4.  **Run**
+    ```bash
+    npm install
+    npm run dev
+    ```
