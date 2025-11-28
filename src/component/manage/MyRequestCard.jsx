@@ -10,6 +10,8 @@ import { apiClient } from '@/utils/apiClient';
 
 const getBadgeClass = priority => {
   switch (priority) {
+    case 'Low':
+      return 'badge-neutral';
     case 'Critical':
       return 'badge-error';
     case 'High':
