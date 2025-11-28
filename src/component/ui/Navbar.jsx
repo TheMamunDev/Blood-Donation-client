@@ -114,7 +114,7 @@ export default function Navbar() {
                       height={40}
                       alt={session?.user?.name}
                       src={
-                        session?.user?.image ||
+                        session?.user?.photo ||
                         'https://i.pravatar.cc/150?img=50'
                       }
                       className="object-cover w-full h-full"
