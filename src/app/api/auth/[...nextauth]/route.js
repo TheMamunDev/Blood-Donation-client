@@ -35,7 +35,7 @@ export const authOptions = {
           id: user._id.toString(),
           name: user.name,
           email: user.email,
-          image: user.photo,
+          photo: user.photo,
           authType: user.authType,
         };
       },
@@ -86,7 +86,7 @@ export const authOptions = {
         id: user._id.toString(),
         name: user.name,
         email: user.email,
-        image: user.photo,
+        photo: user.photo,
         authType: user.authType,
         accessToken: token.accessToken,
       };

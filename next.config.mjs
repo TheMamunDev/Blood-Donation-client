@@ -6,6 +6,7 @@ const nextConfig = {
       'i.ibb.co',
       'i.ibb.co.com',
       'lh3.googleusercontent.com',
+      'img.icons8.com',
     ],
   },
   reactCompiler: true,

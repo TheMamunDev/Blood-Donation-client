@@ -66,7 +66,7 @@ export default function RegisterPage() {
     const apiKey = process.env.NEXT_PUBLIC_IMGBB_KEY;
 
     const formData = new FormData();
-    formData.append('photo', file);
+    formData.append('image', file);
 
     const res = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
       method: 'POST',
@@ -77,16 +77,16 @@ export default function RegisterPage() {
     return data.data.display_url;
   };
 
-  const onSubmit = async formData => {
+  const onSubmit = async formDataHandler => {
     const registrationData = {
-      name: formData.name,
-      email: formData.email,
-      password: formData.password,
+      name: formDataHandler.name,
+      email: formDataHandler.email,
+      password: formDataHandler.password,
       photo: 'https://img.icons8.com/office/300/person-male-skin-type-4.png',
     };
     startTransition(async () => {
       try {
-        const photoURL = await uploadToImgbb(formData.photo);
+        const photoURL = await uploadToImgbb(formDataHandler.photo);
         registrationData.photo = photoURL;
         // console.log(photoURL);
       } catch (err) {

@@ -55,7 +55,7 @@ const navLinks = [
 export default function Navbar() {
   const { data: session, status } = useSession();
 
-  // console.log('session from navbar', session);
+  console.log('session from navbar', session);
   const pathName = usePathname();
 
   const isLoading = status === 'loading';
