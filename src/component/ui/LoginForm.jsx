@@ -7,6 +7,7 @@ import React, { useEffect, useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
 import SessionLoader from '../loader/SessionLoader';
+import { toast } from 'react-toastify';
 
 const loginSchema = z.object({
   email: z.email('Invalid Email'),
@@ -18,7 +19,6 @@ const LoginForm = () => {
   const { data: session, status } = useSession();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/';
-  console.log(callbackUrl + '/?loginSuccess=true');
   const [error, setError] = useState('');
   const [isPending, startTransition] = useTransition();
   const {
@@ -40,7 +40,9 @@ const LoginForm = () => {
         password: data.password,
         callbackUrl,
       });
+      console.log(res);
       if (res?.error) {
+        toast.error(res.error);
         setError('Invalid email or password');
         return;
       }
@@ -48,6 +50,7 @@ const LoginForm = () => {
   };
   useEffect(() => {
     if (status === 'authenticated') {
+      toast.success('Login Successful');
       router.replace(callbackUrl);
     }
   }, [status, router, callbackUrl]);

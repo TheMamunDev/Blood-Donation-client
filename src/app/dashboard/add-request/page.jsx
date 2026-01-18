@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { FiPlusCircle, FiHeart, FiMapPin, FiPhone } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 
 import { useMutation } from '@tanstack/react-query';
+import { useForm } from 'react-hook-form';
 import { apiClient } from '@/utils/apiClient';
 import Swal from 'sweetalert2';
 import { useSession } from 'next-auth/react';
@@ -15,28 +16,28 @@ const priorities = ['Low', 'Medium', 'High', 'Critical'];
 
 export default function AddRequestForm() {
   const { data: session } = useSession();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
   const router = useRouter();
+
   useEffect(() => {
     document.title = 'Add Blood Request | Blood Hub';
   }, []);
-  const [reset, setReset] = useState(null);
+
   const insertData = useMutation({
-    mutationFn: async data => {
-      try {
-        const res = await apiClient('/blood-request', {
-          method: 'POST',
-          body: JSON.stringify(data),
-        });
-        return res.json();
-      } catch (error) {
-        console.log('error', error);
-        throw error;
-      }
-    },
-    onSuccess: (data, variables) => {
+    mutationFn: async data =>
+      apiClient('/blood-request', {
+        method: 'POST',
+        body: JSON.stringify(data),
+      }).then(res => res.json()),
+    onSuccess: data => {
       if (data?.success && data.requestId) {
         toast.success('Blood request added successfully!');
-        reset.target.reset();
+        reset();
         Swal.fire({
           title: `Blood Request Added Successfully`,
           text: `Request ID: ${data.requestId}`,
@@ -61,24 +62,17 @@ export default function AddRequestForm() {
 
   const { isPending } = insertData;
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    setReset(e);
+  const onSubmit = data => {
     const formData = {
+      ...data,
       userEmail: session.user.email,
-      bloodGroupNeeded: e.target.bloodGroupNeeded.value,
-      unitsNeeded: e.target.unitsNeeded.value,
-      hospitalName: e.target.hospitalName.value,
-      contactNumber: e.target.contactNumber.value,
-      priority: e.target.priority.value,
     };
-
     insertData.mutate(formData);
   };
 
   return (
     <div className="card w-full max-w-2xl mx-auto shadow-xl bg-base-100 mt-8">
-      <form onSubmit={handleSubmit} className="card-body">
+      <form onSubmit={handleSubmit(onSubmit)} className="card-body">
         <h2 className="card-title text-2xl md:text-3xl mb-6 text-red-600">
           <FiPlusCircle className="mr-2 hidden md:block" /> Submit New Blood
           Request
@@ -92,9 +86,10 @@ export default function AddRequestForm() {
             </span>
           </label>
           <select
-            name="bloodGroupNeeded"
+            {...register('bloodGroupNeeded', {
+              required: 'Blood group is required',
+            })}
             className="select select-bordered w-full"
-            required
           >
             <option value="">Select Required Blood Group</option>
             {bloodGroups.map(group => (
@@ -103,6 +98,11 @@ export default function AddRequestForm() {
               </option>
             ))}
           </select>
+          {errors.bloodGroupNeeded && (
+            <p className="text-red-500 text-xs mt-1">
+              {errors.bloodGroupNeeded.message}
+            </p>
+          )}
         </div>
         <div className="form-control fieldset">
           <label className="label">
@@ -110,12 +110,18 @@ export default function AddRequestForm() {
           </label>
           <input
             type="number"
-            name="unitsNeeded"
+            {...register('unitsNeeded', {
+              required: 'Units are required',
+              min: { value: 1, message: 'Minimum 1 unit is required' },
+            })}
             placeholder="e.g., 2"
-            min="1"
             className="input input-bordered w-full"
-            required
           />
+          {errors.unitsNeeded && (
+            <p className="text-red-500 text-xs mt-1">
+              {errors.unitsNeeded.message}
+            </p>
+          )}
         </div>
 
         <div className="form-control fieldset">
@@ -123,9 +129,8 @@ export default function AddRequestForm() {
             <span className="label-text">Priority Level</span>
           </label>
           <select
-            name="priority"
+            {...register('priority', { required: 'Priority is required' })}
             className="select w-full select-bordered"
-            required
           >
             {priorities.map(p => (
               <option key={p} value={p}>
@@ -133,6 +138,11 @@ export default function AddRequestForm() {
               </option>
             ))}
           </select>
+          {errors.priority && (
+            <p className="text-red-500 text-xs mt-1">
+              {errors.priority.message}
+            </p>
+          )}
         </div>
 
         <div className="form-control fieldset">
@@ -144,11 +154,17 @@ export default function AddRequestForm() {
           </label>
           <input
             type="text"
-            name="hospitalName"
+            {...register('hospitalName', {
+              required: 'Hospital name is required',
+            })}
             placeholder="e.g., City Trauma Center, Dhaka"
             className="input input-bordered w-full"
-            required
           />
+          {errors.hospitalName && (
+            <p className="text-red-500 text-xs mt-1">
+              {errors.hospitalName.message}
+            </p>
+          )}
         </div>
 
         <div className="form-control fieldset">
@@ -160,11 +176,21 @@ export default function AddRequestForm() {
           </label>
           <input
             type="tel"
-            name="contactNumber"
+            {...register('contactNumber', {
+              required: 'Contact number is required',
+              pattern: {
+                value: /^(?:\+88|88)?(01[3-9]\d{8})$/,
+                message: 'Please enter a valid BD phone number',
+              },
+            })}
             placeholder="e.g., 01XXXXXXXXX"
             className="input input-bordered w-full"
-            required
           />
+          {errors.contactNumber && (
+            <p className="text-red-500 text-xs mt-1">
+              {errors.contactNumber.message}
+            </p>
+          )}
         </div>
 
         <div className="form-control mt-6">

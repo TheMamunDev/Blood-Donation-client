@@ -6,6 +6,7 @@ import Impacts from '@/component/homePageComponent/Impact';
 import Testomonials from '@/component/homePageComponent/Testomonials';
 import ToastListner from '@/component/homePageComponent/ToastListner';
 import { Suspense } from 'react';
+import TestimonialSlider from '@/component/homePageComponent/Testomonials/TestimonialSlider';
 
 export const metadata = {
   title: 'Home | Blood Hub',
@@ -25,6 +26,7 @@ export default function Home() {
       <Impacts></Impacts>
       <Testomonials></Testomonials>
       <ActionBanner></ActionBanner>
+      <TestimonialSlider></TestimonialSlider>
     </div>
   );
 }

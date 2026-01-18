@@ -21,11 +21,14 @@ export default function ManageRequestsPage() {
   } = useQuery({
     queryKey: ['my-requests'],
     queryFn: async () => {
-      const res = await apiClient(`/my-request/${session.user.email}`);
-      if (!res.ok) throw new Error('Failed to fetch my requests');
+      const res = await apiClient(`/my-request/${session?.user.email}`);
+      if (res.status === 403) {
+        throw new Error('Failed to fetch my requests');
+      }
       return res.json();
     },
   });
+  console.log(error);
   if (error) return <Error error={error}></Error>;
 
   return (
