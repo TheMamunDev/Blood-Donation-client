@@ -4,9 +4,10 @@ import DonorSearchForm from '@/component/homePageComponent/DonersSearch';
 import FeaturedReq from '@/component/homePageComponent/FeaturedReq';
 import Impacts from '@/component/homePageComponent/Impact';
 import Testomonials from '@/component/homePageComponent/Testomonials';
-import ToastListner from '@/component/homePageComponent/ToastListner';
 import { Suspense } from 'react';
 import TestimonialSlider from '@/component/homePageComponent/Testomonials/TestimonialSlider';
+
+import ToastListner from '@/component/homePageComponent/ToastListner';
 
 export const metadata = {
   title: 'Home | Blood Hub',

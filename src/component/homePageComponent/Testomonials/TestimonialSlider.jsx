@@ -7,9 +7,10 @@ import { useEffect, useRef, useState } from 'react';
 
 const CARD_WIDTH_DESKTOP = 450;
 const CARD_WIDTH_MOBILE = 300;
-const GAP = 32; // Gap-8 = 2rem = 32px
+const GAP = 32;
 
 const TestimonialSlider = () => {
+  const [isMobile, setIsMobile] = useState(false);
   const TESTIMONIALS = data;
   const [currentIndex, setCurrentIndex] = useState(1);
   const containerRef = useRef(null);
@@ -28,13 +29,24 @@ const TestimonialSlider = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const handleNext = () => {
     setCurrentIndex(prev => (prev + 1) % TESTIMONIALS.length);
   };
 
   const handlePrev = () => {
     setCurrentIndex(
-      prev => (prev - 1 + TESTIMONIALS.length) % TESTIMONIALS.length
+      prev => (prev - 1 + TESTIMONIALS.length) % TESTIMONIALS.length,
     );
   };
 
@@ -43,16 +55,12 @@ const TestimonialSlider = () => {
   };
 
   const getTransformStyle = () => {
-    const isMobile = window.innerWidth < 768;
     const cardWidth = isMobile ? CARD_WIDTH_MOBILE : CARD_WIDTH_DESKTOP;
 
     const centerOffset = containerWidth / 2;
     const halfCard = cardWidth / 2;
 
-    // Distance to shift: (Index * (Card + Gap))
     const shift = currentIndex * (cardWidth + GAP);
-
-    // Final Formula: Center - HalfCard - Shift
     const transformX = centerOffset - halfCard - shift;
 
     return { transform: `translateX(${transformX}px)` };
@@ -71,10 +79,7 @@ const TestimonialSlider = () => {
         </p>
       </div>
 
-      <div
-        ref={containerRef}
-        className="w-full relative overflow-hidden py-10"
-      >
+      <div ref={containerRef} className="w-full relative overflow-hidden py-10">
         <div
           className="flex items-center gap-8 transition-transform duration-500 ease-in-out will-change-transform"
           style={getTransformStyle()}
