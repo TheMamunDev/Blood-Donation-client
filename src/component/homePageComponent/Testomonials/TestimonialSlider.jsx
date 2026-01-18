@@ -84,7 +84,7 @@ const TestimonialSlider = () => {
           className="flex items-center gap-8 transition-transform duration-500 ease-in-out will-change-transform"
           style={getTransformStyle()}
         >
-          {TESTIMONIALS.map((testimonial, index) => (
+          {TESTIMONIALS?.map((testimonial, index) => (
             <TestimonialCard
               key={testimonial.id}
               testimonial={testimonial}
@@ -104,9 +104,8 @@ const TestimonialSlider = () => {
             <ArrowLeft size={20} />
           </button>
 
-          {/* Pagination Dots */}
           <div className="flex items-center gap-2">
-            {TESTIMONIALS.map((_, index) => (
+            {TESTIMONIALS?.map((_, index) => (
               <button
                 key={index}
                 onClick={() => handleDotClick(index)}

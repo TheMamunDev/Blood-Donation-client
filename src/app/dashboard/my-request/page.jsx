@@ -19,7 +19,8 @@ export default function ManageRequestsPage() {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ['my-requests'],
+    queryKey: ['my-requests', session?.user?.email],
+    enabled: !!session?.user?.email,
     queryFn: async () => {
       const res = await apiClient(`/my-request/${session?.user.email}`);
       if (res.status === 403) {
@@ -42,7 +43,7 @@ export default function ManageRequestsPage() {
         submitted blood requests and check their status.
       </p>
 
-      {requests?.length === 0 ? (
+      {Array.isArray(requests) && requests.length === 0 ? (
         <div className="alert alert-info shadow-lg">
           <div>
             <svg
@@ -78,9 +79,10 @@ export default function ManageRequestsPage() {
             <MyRequestsSkeleton total={9}> </MyRequestsSkeleton>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {requests?.map(request => (
-                <MyRequestedCard key={request._id} request={request} />
-              ))}
+              {Array.isArray(requests) &&
+                requests.map(request => (
+                  <MyRequestedCard key={request._id} request={request} />
+                ))}
             </div>
           )}
         </>
