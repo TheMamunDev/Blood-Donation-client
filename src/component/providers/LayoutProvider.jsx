@@ -3,7 +3,6 @@ import { AuthProvider } from '@/app/Provider';
 import Navbar from '../ui/Navbar';
 import Footer from '../ui/Footer';
 import { ToastContainer } from 'react-toastify';
-import ToastListner from '../homePageComponent/ToastListner';
 
 export default function LayoutProvider({ children }) {
   return (

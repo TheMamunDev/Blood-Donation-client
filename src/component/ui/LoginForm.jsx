@@ -63,7 +63,7 @@ const LoginForm = () => {
     );
   const handleGoogle = e => {
     e.preventDefault();
-    signIn('google', `${callbackUrl}/?loginSuccess=true`);
+    signIn('google', { callbackUrl: `${callbackUrl}/?loginSuccess=true` });
   };
   return (
     <div className="flex min-h-screen justify-center items-center py-10 bg-base-100">

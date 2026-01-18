@@ -50,7 +50,7 @@ export default function RequestDetailsPage() {
   if (error) return <Error error={error}></Error>;
 
   return (
-    <div className="min-h-screen py-10 max-w-4xl mx-auto">
+    <div className="min-h-screen py-10 max-w-4xl mx-auto wid">
       <Link href="/requests" className="btn btn-ghost mb-8 text-lg">
         <FiArrowLeft /> Back to all requests
       </Link>
